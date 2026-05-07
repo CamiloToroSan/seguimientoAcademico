@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Gestionar proyecto: {{ proyecto.titulo }}</h2>
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label>Estado</label>
+        <select name="estado" class="form-select">
+            {% for value, label in proyecto.ESTADO_CHOICES %}
+                <option value="{{ value }}" {% if proyecto.estado == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Calificación (0-10)</label>
+        <input type="number" step="0.01" name="calificacion" value="{{ proyecto.calificacion }}" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <a href="{% url 'proyectos_academicos:lista_proyectos' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

@@ -121,7 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-LOGIN_URL = 'login'
+LOGIN_URL = 'proyectos_academicos:login'
 LOGIN_REDIRECT_URL = 'proyectos_academicos:lista_proyectos'
 LOGOUT_REDIRECT_URL = 'proyectos_academicos:login'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

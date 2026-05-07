@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Lista de Proyectos</h1>
+<form method="get" class="row g-3 mb-4">
+    <div class="col-auto">
+        <select name="estado" class="form-select">
+            <option value="">Todos los estados</option>
+            {% for value, label in estado_choices %}
+                <option value="{{ value }}" {% if filtro_estado == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    {% if user.groups.all.0.name == 'Docente' %}
+    <div class="col-auto">
+        <select name="estudiante" class="form-select">
+            <option value="">Todos los estudiantes</option>
+            {% for est in estudiantes %}
+                <option value="{{ est.id }}" {% if filtro_estudiante == est.id|stringformat:"s" %}selected{% endif %}>{{ est.username }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    {% endif %}
+    <div class="col-auto">
+        <button type="submit" class="btn btn-secondary">Filtrar</button>
+        <a href="{% url 'proyectos_academicos:lista_proyectos' %}" class="btn btn-outline-secondary">Limpiar</a>
+    </div>
+</form>
+<a href="{% url 'proyectos_academicos:crear_proyecto' %}" class="btn btn-success mb-3">Nuevo proyecto</a>
+{% if user.groups.all.0.name == 'Docente' %}
+    <a href="{% url 'proyectos_academicos:exportar_csv' %}" class="btn btn-info mb-3">Exportar CSV</a>
+{% endif %}
+<table class="table table-striped">
+    <thead>
+        <tr><th>Título</th><th>Estudiante</th><th>Estado</th><th>Fecha envío</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+        {% for proyecto in proyectos %}
+        <tr>
+            <td>{{ proyecto.titulo }}</td>
+            <td>{{ proyecto.estudiante.username }}</td>
+            <td>{{ proyecto.get_estado_display }}</td>
+            <td>{{ proyecto.fecha_envio }}</td>
+            <td>
+                <a href="{% url 'proyectos_academicos:detalle_proyecto' proyecto.pk %}" class="btn btn-sm btn-info">Ver</a>
+                {% if proyecto.estado != 'aprobado' and user == proyecto.estudiante %}
+                    <a href="{% url 'proyectos_academicos:editar_proyecto' proyecto.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                    <a href="{% url 'proyectos_academicos:eliminar_proyecto' proyecto.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
+                {% endif %}
+                {% if user.groups.all.0.name == 'Docente' %}
+                    <a href="{% url 'proyectos_academicos:docente_actualizar' proyecto.pk %}" class="btn btn-sm btn-primary">Gestionar</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No hay proyectos. </td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% include 'paginacion.html' %}
+{% endblock %}

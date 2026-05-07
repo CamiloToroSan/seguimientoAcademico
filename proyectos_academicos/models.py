@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+# Create your models here.
+
 class Proyecto(models.Model):
     ESTADO_CHOICES = [
         ('enviado', 'Enviado'),
@@ -17,3 +19,14 @@ class Proyecto(models.Model):
     calificacion = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     def __str__(self):
         return self.titulo
+    
+class Comentario(models.Model):
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, related_name='comentarios')
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    texto = models.TextField()
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.proyecto.titulo}"
+    
+

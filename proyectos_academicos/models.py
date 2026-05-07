@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 class Proyecto(models.Model):
     ESTADO_CHOICES = [
         ('enviado', 'Enviado'),
-        ('revisión', 'En Revisión'),
+        ('revision', 'En Revision'),
         ('aprobado', 'Aprobado'),
     ]
     
@@ -15,3 +15,5 @@ class Proyecto(models.Model):
     fecha_envio = models.DateTimeField(auto_now_add=True)
     fecha_revision = models.DateTimeField(null=True, blank=True)
     calificacion = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    def __str__(self):
+        return self.titulo

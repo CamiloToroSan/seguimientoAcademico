@@ -5,11 +5,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Proyecto
 from .forms import ProyectoForm
 
-class ProyectoListView(LoginRequiredMixin, ListView):
-    model = Proyecto
-    template_name = 'proyectos/lista.html'
-    context_object_name = 'proyectos'
-
 
 class ProyectoCreateView(LoginRequiredMixin, CreateView):
     model = Proyecto
@@ -36,3 +31,22 @@ class ProyectoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('proyecto_list')
     def test_func(self):
         return self.get_object().estudiante == self.request.user
+     
+class EstudianteRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.groups.filter(name='Estudiante').exists()
+    def handle_no_permission(self):
+        return redirect('proyectos_academicos:lista_proyectos')
+
+class DocenteRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.groups.filter(name='Docente').exists()
+    def handle_no_permission(self):
+        return redirect('proyectos_academicos:lista_proyectos')
+
+class EsPropietarioMixin(UserPassesTestMixin):
+    def test_func(self):
+        obj = self.get_object()
+        return self.request.user == obj.estudiante
+    def handle_no_permission(self):
+        return redirect('proyectos_academicos:lista_proyectos')

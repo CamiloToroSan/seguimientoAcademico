@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ proyecto.titulo }}</h1>
+<p><strong>Estudiante:</strong> {{ proyecto.estudiante.username }}</p>
+<p><strong>Estado:</strong> {{ proyecto.get_estado_display }}</p>
+<p><strong>Calificación:</strong> {{ proyecto.calificacion }}</p>
+<p>{{ proyecto.descripcion|linebreaks }}</p>
+{% if proyecto.documento %}
+    <a href="{{ proyecto.documento.url }}" class="btn btn-secondary">Descargar documento</a>
+{% endif %}
+
+<h3>Comentarios</h3>
+{% for comentario in proyecto.comentarios.all %}
+    <div class="border p-2 mb-2">
+        <strong>{{ comentario.usuario.username }}</strong> - {{ comentario.fecha }}<br>
+        {{ comentario.texto }}
+    </div>
+{% empty %}
+    <p>No hay comentarios.</p>
+{% endfor %}
+
+{% if proyecto.estado != 'aprobado' %}
+    <form method="post" action="{% url 'proyectos_academicos:agregar_comentario' proyecto.pk %}">
+        {% csrf_token %}
+        <textarea name="texto" class="form-control" rows="3" placeholder="Escribe un comentario..."></textarea>
+        <button type="submit" class="btn btn-primary mt-2">Comentar</button>
+    </form>
+{% else %}
+    <p class="text-muted">Proyecto aprobado. No se pueden añadir más comentarios.</p>
+{% endif %}
+
+<a href="{% url 'proyectos_academicos:lista_proyectos' %}" class="btn btn-secondary mt-3">Volver</a>
+{% endblock %}

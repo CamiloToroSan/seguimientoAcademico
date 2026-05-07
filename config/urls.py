@@ -19,4 +19,6 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('detalle/<int:pk>/', views.ProyectoDetailView.as_view(), name='detalle_proyecto'),
+    path('comentario/<int:pk>/', views.agregar_comentario, name='agregar_comentario'),
 ]

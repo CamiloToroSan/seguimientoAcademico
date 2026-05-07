@@ -122,8 +122,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'lista_proyectos'
-LOGOUT_REDIRECT_URL = 'login'
+LOGIN_REDIRECT_URL = 'proyectos_academicos:lista_proyectos'
+LOGOUT_REDIRECT_URL = 'proyectos_academicos:login'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 MEDIA_URL = '/media/'

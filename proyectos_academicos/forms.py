@@ -1,7 +1,8 @@
 from django import forms
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit
+from crispy_forms.layout import Layout, Submit, Field
 from .models import Proyecto
+
 class ProyectoForm(forms.ModelForm):
     class Meta:
         model = Proyecto
@@ -11,4 +12,9 @@ class ProyectoForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = 'post'
-        self.helper.layout = Layout('titulo', 'descripcion', 'documento', Submit('submit', 'Guardar', css_class='btn btn-primary'))
+        self.helper.layout = Layout(
+            Field('titulo', css_class='form-control'),
+            Field('descripcion', css_class='form-control', rows=4),
+            Field('documento', css_class='form-control'),
+            Submit('submit', 'Guardar', css_class='btn btn-success mt-3')
+        )

@@ -2,8 +2,9 @@
 from django.views.generic import DetailView
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import Comentario
+from .models import Comentario, Proyecto
 from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class ProyectoDetailView(LoginRequiredMixin, DetailView):

@@ -1,0 +1,53 @@
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Proyectos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Mis Proyectos Académicos</h1>
+        
+        <a href="{% url 'proyecto_create' %}" class="btn btn-primary mb-3">Nuevo Proyecto</a>
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Estado</th>
+                    <th>Fecha de Envío</th>
+                    <th>Calificación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for proyecto in proyectos %}
+                <tr>
+                    <td>{{ proyecto.titulo }}</td>
+                    <td>
+                        <span class="badge bg-{% if proyecto.estado == 'aprobado' %}success{% elif proyecto.estado == 'revision' %}warning{% else %}secondary{% endif %}">
+                            {{ proyecto.get_estado_display }}
+                        </span>
+                    </td>
+                    <td>{{ proyecto.fecha_envio|date:"d/m/Y H:i" }}</td>
+                    <td>{{ proyecto.calificacion|default:"-" }}</td>
+                    <td>
+                        <a href="{% url 'proyecto_update' proyecto.pk %}" class="btn btn-sm btn-info">Editar</a>
+                        <a href="{% url 'proyecto_delete' proyecto.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No hay proyectos registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <a href="{% url 'logout' %}" class="btn btn-secondary mt-3">Cerrar Sesión</a>
+    </div>
+</body>
+</html>
